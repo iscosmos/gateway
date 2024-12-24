@@ -5,9 +5,9 @@
 
     <!-- 表格操作工具条 -->
     <t-space>
-      <t-select placeholder="请选择所属平台" v-model="platformCode" :options="devicePlatformCode" @change="changeDevicePlatformCode"> </t-select>
+      <t-select placeholder="请选择所属平台" v-model="platformCode" :options="devicePlatformCode"> </t-select>
 
-      <t-input placeholder="设备名称/制造商/设备类型" class="min-w-[230px]" v-model="name" clearable>
+      <t-input placeholder="设备名称/制造商/设备类型" class="min-w-[230px]" v-model="keyword" clearable>
         <template #prefixIcon>
           <search-icon />
         </template>
@@ -20,8 +20,8 @@
     <t-table row-key="code" :data="data" :columns="columns" :pagination="pagination" @page-change="onPageChange" class="mt-4">
       <!-- 状态 -->
       <template #online="{ row, index }">
-        <t-tag v-if="row.online == 0" theme="warning" variant="light">离线</t-tag>
-        <t-tag v-else-if="row.online == 1" theme="success" variant="light">在线</t-tag>
+        <t-tag v-if="row.online == false" theme="warning" variant="light">离线</t-tag>
+        <t-tag v-else-if="row.online == true" theme="success" variant="light">在线</t-tag>
       </template>
 
       <!-- 设备类型 -->
@@ -38,10 +38,6 @@
           <!-- 编辑按钮 -->
           <t-link theme="primary">播放</t-link>
           <t-divider layout="vertical" />
-          <!-- 删除按钮 -->
-          <t-popconfirm theme="danger" content="确认删除吗">
-            <t-link theme="primary">删除</t-link>
-          </t-popconfirm>
         </t-space>
       </template>
     </t-table>
@@ -58,11 +54,11 @@ const deviceStore = useDeviceStore()
 
 // 筛选条件
 const platformCode = ref('')
-const name = ref('')
+const keyword = ref('')
 
 // 过滤
 const filter = async () => {
-  console.log(`==>${platformCode.value} ${name.value}`)
+  console.log(`==>${platformCode.value} ${keyword.value}`)
 
   await fetchTableData({
     current: pagination.value.current || pagination.value.defaultCurrent,
@@ -86,7 +82,7 @@ const fetchTableData = async (pageInfo) => {
       page: current,
       pageSize: pageSize,
       platformCode: platformCode.value,
-      name: name.value,
+      keyword: keyword.value,
     })
     console.log(result)
 
