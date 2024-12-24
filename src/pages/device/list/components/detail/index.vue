@@ -42,11 +42,13 @@ const data = ref({})
 const openDialog = async (value) => {
   try {
     const result = await deviceStore.deviceDetail({ code: value.code })
+    console.log(result.data)
+
     data.value = result.data
+    dialogVisible.value = true
   } catch (error) {
     MessagePlugin.error(error.message)
   }
-  dialogVisible.value = true
 }
 
 defineExpose({ openDialog })
