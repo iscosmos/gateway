@@ -5,11 +5,7 @@
 
     <!-- 表格操作工具条 -->
     <t-space>
-      <t-select placeholder="请选择所属平台" v-model="platformCode">
-        <t-option key="apple" label="Apple" value="apple" />
-        <t-option key="orange" label="Orange" value="orange" />
-        <t-option key="banana" label="Banana" value="banana" />
-      </t-select>
+      <t-select placeholder="请选择所属平台" v-model="platformCode" :options="devicePlatformCode" @change="changeDevicePlatformCode"> </t-select>
 
       <t-input placeholder="设备名称/制造商/设备类型" class="min-w-[230px]" v-model="name" clearable>
         <template #prefixIcon>
@@ -23,9 +19,9 @@
     <!-- 表格 -->
     <t-table row-key="code" :data="data" :columns="columns" :pagination="pagination" @page-change="onPageChange" class="mt-4">
       <!-- 状态 -->
-      <template #status="{ row, index }">
-        <t-tag v-if="row.status == 0" theme="success" variant="light">已发布</t-tag>
-        <t-tag v-else-if="row.status == 1" theme="warning" variant="light">未发布</t-tag>
+      <template #online="{ row, index }">
+        <t-tag v-if="row.online == 0" theme="warning" variant="light">离线</t-tag>
+        <t-tag v-else-if="row.online == 1" theme="success" variant="light">在线</t-tag>
       </template>
 
       <!-- 设备类型 -->
@@ -127,6 +123,20 @@ onMounted(async () => {
     current: pagination.value.current || pagination.value.defaultCurrent,
     pageSize: pagination.value.pageSize || pagination.value.defaultPageSize,
   })
+})
+
+// 查询平台
+const devicePlatformCode = ref([])
+onMounted(async () => {
+  try {
+    const result = await deviceStore.listPlatformCode()
+    console.log(result)
+    result.list.forEach((item) => {
+      devicePlatformCode.value.push({ label: `${item.name}(${item.code})`, value: item.code })
+    })
+  } catch (error) {
+    MessagePlugin.error(error.message)
+  }
 })
 </script>
 
