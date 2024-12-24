@@ -33,7 +33,7 @@
       <template #operate="{ row, col }">
         <t-space size="0">
           <!-- 详情按钮 -->
-          <t-link theme="primary">详情</t-link>
+          <t-link theme="primary" @click="detail(row)">详情</t-link>
           <t-divider layout="vertical" />
           <!-- 编辑按钮 -->
           <t-link theme="primary">播放</t-link>
@@ -42,6 +42,8 @@
       </template>
     </t-table>
   </t-card>
+
+  <DetailDialog ref="detailDialog" />
 </template>
 
 <script setup>
@@ -50,7 +52,15 @@ import { MessagePlugin } from 'tdesign-vue-next'
 import { SearchIcon } from 'tdesign-icons-vue-next'
 import { useDeviceStore } from '@/store'
 
+import DetailDialog from './components/detail/index.vue'
+
 const deviceStore = useDeviceStore()
+
+// 设备详情
+const detailDialog = ref(null)
+const detail = (row) => {
+  detailDialog.value.openDialog(row)
+}
 
 // 筛选条件
 const platformCode = ref('')
@@ -128,7 +138,7 @@ onMounted(async () => {
     const result = await deviceStore.listPlatformCode()
     console.log(result)
     result.list.forEach((item) => {
-      devicePlatformCode.value.push({ label: `${item.name}(${item.code})`, value: item.code })
+      devicePlatformCode.value.push({ label: `${item.code}(${item.name})`, value: item.code })
     })
   } catch (error) {
     MessagePlugin.error(error.message)
