@@ -1,5 +1,5 @@
 <template>
-  <t-dialog :header="data.name" v-model:visible="dialogVisible">
+  <t-dialog :header="data.name" :footer="false" width="40%" v-model:visible="dialogVisible">
     <t-descriptions>
       <t-descriptions-item label="设备编码">{{ data.code }}</t-descriptions-item>
       <t-descriptions-item label="负责人">{{ data.owner }}</t-descriptions-item>
@@ -30,12 +30,21 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useDeviceStore } from '@/store'
+import { MessagePlugin } from 'tdesign-vue-next'
+
+const deviceStore = useDeviceStore()
 
 const dialogVisible = ref(false)
 
 const data = ref({})
-const openDialog = (value) => {
-  data.value = value
+const openDialog = async (value) => {
+  try {
+    const result = await deviceStore.deviceDetail({ code: value.code })
+    data.value = result.data
+  } catch (error) {
+    MessagePlugin.error(error.message)
+  }
   dialogVisible.value = true
 }
 
