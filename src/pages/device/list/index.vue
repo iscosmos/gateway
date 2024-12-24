@@ -106,7 +106,7 @@ const pagination = ref({ defaultCurrent: 1, defaultPageSize: 10, total: 0 })
 const columns = ref([
   { colKey: 'code', title: '设备编码' },
   { colKey: 'name', title: '设备名称' },
-  { colKey: 'status', title: '设备状态' },
+  { colKey: 'online', title: '设备状态' },
   { colKey: 'type', title: '设备类型' },
   { colKey: 'manufacturer', title: '制造商' },
   { colKey: 'platform', title: '所属平台' },
