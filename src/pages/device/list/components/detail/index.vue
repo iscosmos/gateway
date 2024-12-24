@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useDeviceStore } from '@/store'
 import { MessagePlugin } from 'tdesign-vue-next'
 
@@ -39,17 +39,26 @@ const deviceStore = useDeviceStore()
 const dialogVisible = ref(false)
 
 const data = ref({})
-const openDialog = async (value) => {
-  try {
-    const result = await deviceStore.deviceDetail({ code: value.code })
-    console.log(result.data)
-
-    data.value = result.data
-    dialogVisible.value = true
-  } catch (error) {
-    MessagePlugin.error(error.message)
-  }
+const code = ref('')
+const openDialog = (value) => {
+  code.value = value.code
+  dialogVisible.value = true
 }
+
+watch(
+  () => dialogVisible.value,
+  async () => {
+    if (dialogVisible.value) {
+      try {
+        const result = await deviceStore.deviceDetail({ code: code.value })
+        console.log(result.data)
+        data.value = result.data
+      } catch (error) {
+        MessagePlugin.error(error.message)
+      }
+    }
+  }
+)
 
 defineExpose({ openDialog })
 </script>

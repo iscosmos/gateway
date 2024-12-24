@@ -58,8 +58,8 @@ const deviceStore = useDeviceStore()
 
 // 设备详情
 const detailDialog = ref(null)
-const detail = async (row) => {
-  await detailDialog.value.openDialog(row)
+const detail = (row) => {
+  detailDialog.value.openDialog(row)
 }
 
 // 筛选条件
