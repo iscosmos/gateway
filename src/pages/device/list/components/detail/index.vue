@@ -1,5 +1,6 @@
 <template>
-  <t-dialog :header="data.name" :footer="false" width="40%" v-model:visible="dialogVisible">
+  <t-dialog :footer="false" width="40%" v-model:visible="dialogVisible">
+    <template #header>{{ data.name }}</template>
     <t-descriptions>
       <t-descriptions-item label="设备编码">{{ data.code }}</t-descriptions-item>
       <t-descriptions-item label="负责人">{{ data.owner }}</t-descriptions-item>
